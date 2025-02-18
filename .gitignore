@@ -1,0 +1,53 @@
+# Ignore C# (.NET) files
+## Build and publish directories
+bin/
+obj/
+out/
+publish/
+
+## Debug and release files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## NuGet files
+.nuget/
+packages/
+*.nupkg
+
+## Local development files
+.vs/
+*.swp
+*.cache
+
+
+# Ignore Next.js files
+## Dependencies
+node_modules/
+.next/
+
+## Build files
+out/
+dist/
+
+## Environment files
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+## Logs
+*.log
+logs/
+
+## IDE-specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+## OS-specific files
+.DS_Store
+Thumbs.db
