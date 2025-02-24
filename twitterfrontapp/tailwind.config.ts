@@ -11,6 +11,7 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        linkColor: '#1EA1F2',
       },
     },
   },
