@@ -20,7 +20,7 @@ export default function RootLayout({
     return (
       <html lang="en">
         <body>
-            <div>
+            <div className="bg-gray-900 text-white">
                 {navLinks.map((link) => {
 
                     const isActive =  pathname == link.href || (pathname.startsWith(link.href) && link.href !== "/")

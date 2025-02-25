@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import Author from "./author";
 import Sidebar from "@/components/_sidebar/Sidebar";
 import PostTextArea from "@/components/_post/PostTextArea";
 import EngagingBar from "@/components/_EngagingBar/page";
@@ -46,8 +45,7 @@ export default async function PostFeed() {
                                 <div className="text-sm text-white-500">Loading author...</div>
                             }
                             >
-                            <p>{post.createdBy} <span className="text-sm text-gray-500"> @{post.createdBy}</span></p>    
-                            {/* <Author userId={post.userId} /> */}
+                            <p>{post.createdBy} <span className="text-sm text-gray-500"> @{post.createdBy}</span></p>
                             </Suspense>
                             <p className="text-white-600 mb-4 leading-relaxed">{post.body}</p>
                             
