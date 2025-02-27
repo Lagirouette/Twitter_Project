@@ -2,6 +2,8 @@
 import { useRouter } from "next/navigation";
 import { SyntheticEvent, useState } from "react";
 import { TokenCookie } from "./action";
+import BackButton from "@/components/_buttons/backButton";
+import { LoginTwitter } from "@/api/ApiCalls";
 
 
 export default function Login() {
@@ -12,22 +14,9 @@ export default function Login() {
 
   const submit = async (e:SyntheticEvent) => {
     e.preventDefault()
-    
-    console.log(JSON.stringify({
-      userName:username,
-      passWord:password
-    }))
 
     try{
-      const data =  await fetch("http://localhost:5130/api/account/login", {
-        method:"POST",
-        headers:{"Content-Type": "application/json; charset=utf-8"},
-        credentials:"same-origin",
-        body: JSON.stringify({
-            userName:username,
-            passWord:password
-        })
-      })
+      const data = await LoginTwitter(username, password)
 
       const user = await data.json()
 
@@ -41,8 +30,8 @@ export default function Login() {
   }
 
   return (
-    <>
-       <section className="bg-gray-900">
+    <section className="bg-gray-900">
+      <BackButton/>
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <div className="w-full rounded-lg shadow border md:mb-20 sm:max-w-md xl:p-0 bg-gray-800 border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -128,6 +117,6 @@ export default function Login() {
         </div>
       </div>
     </section>
-    </>
+   
   );
 }

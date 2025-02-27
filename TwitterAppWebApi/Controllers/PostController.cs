@@ -29,6 +29,14 @@ namespace TwitterAppWebApi.Controllers
             return Ok(postsDto);
         }
 
+        [HttpGet("{userName}")]
+        public async Task<IActionResult> GetAllByName([FromRoute] string userName)
+        {
+            var posts = await _postRepository.GetAllByUserNameAsync(userName);
+            var postsDto = posts.Select(s => s.toPostDto());
+            return Ok(postsDto);
+        }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute]int id)
         {
@@ -37,6 +45,15 @@ namespace TwitterAppWebApi.Controllers
             return Ok(postDto);
 
         }
+
+        //[HttpGet("{userName}")]
+        //public async Task<IActionResult> GetByName([FromRoute] string userName)
+        //{
+        //    var post = await _postRepository.GetByUserNameAsync(userName);
+        //    var postDto = post.toPostDto();
+        //    return Ok(postDto);
+
+        //}
 
         [HttpPost]
         public async Task<IActionResult> Create(CreatePostDTO createPostDTO)

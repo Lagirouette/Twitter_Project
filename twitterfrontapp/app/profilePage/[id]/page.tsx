@@ -5,16 +5,17 @@ import EngagingBar from "@/components/_EngagingBar/page";
 import LeftSideBar from "@/components/_lsidebar/lsidebar";
 import AuthorName from "@/components/_authorFetching/authorName";
 import BackButton from "@/components/_buttons/backButton";
+import Link from "next/link";
 
 type Post = {
-    userId: number;
-    id: string;
+    createdBy: string;
+    createOn: Date;
     title: string;
     body: string;
 }
 
 async function GetUserPosts(userId:string) {
-    const response = await fetch(`https://jsonplaceholder.typicode.com/posts?userId=${userId}`)
+    const response = await fetch(`http://localhost:5130/api/post/${userId}`)
     return response.json()
 }
 
@@ -30,7 +31,7 @@ export default async function ProfilePage({
     const[post] = await Promise.all([postData])
 
     return (
-        <div className="bg-black grid grid-cols-10 flex">
+        <div className="grid grid-cols-10">
             
             <div className="col-span-2 pl-10 pt-2 text-xl font-bold flex-none">
                 <Sidebar/>
@@ -40,7 +41,7 @@ export default async function ProfilePage({
                 <div className="flex shadow-md p-3 border border-solid border-gray-800">
                     <BackButton/>
                     <div className="">
-                        <AuthorName userId={id}/>
+                        {id}
                         <p className="text-sm text-gray-500">242 Tweets</p>
                     </div>
                 </div>
@@ -56,24 +57,26 @@ export default async function ProfilePage({
                     </div>
                 </div>
                 <div className="shadow-md p-3 border-b border-x border-solid border-gray-800">
-                    <h1 className="font-bold text-xl"><AuthorFetching userId={id} /></h1>
+                    <h1 className="font-bold text-xl">{id}</h1>
                 </div>
                 {post.map((post : Post) => (
-                    <div className="flex shadow-md p-6 border-b border-x border-solid border-gray-800">
+                    <div className="flex shadow-md p-4 border border-solid border-gray-700">
                         <div className="px-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 h-8 w-8 flex-none">
+                            <svg xmlns="www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 h-8 w-8 flex-none">
                                 <path d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                             </svg>
                         </div>
-                        <div key={post.id} className="">
-                            <Suspense
-                            fallback={
-                                <div className="text-sm text-white-500">Loading author...</div>
-                            }
-                            >
-                            <AuthorFetching userId={id} />
-                            </Suspense>
-                            <p className="text-white-600 mb-4 leading-relaxed">{post.body}</p>
+                        <div className="w-full">
+                            <Link href={"http://localhost:3000//profilePage/"+ post.createdBy	}>
+                                <Suspense
+                                fallback={
+                                    <div className="text-sm text-white">Loading author...</div>
+                                }
+                                >
+                                <p><span className="text-xl">{post.createdBy} </span><span className="text-sm text-gray-500"> @{post.createdBy}</span></p>
+                                </Suspense>
+                                <p className="text-white mb-4 leading-relaxed">{post.body}</p>
+                            </Link>
                             <EngagingBar/>
                         </div>
                     </div>

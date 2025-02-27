@@ -39,6 +39,12 @@ namespace TwitterAppWebApi.Repository.PostRepositories
         {
             return await _context.Posts.Include(a => a.AppUser).ToListAsync();
         }
+
+        public async Task<List<Post>> GetAllByUserNameAsync(string userName)
+        {
+            return await _context.Posts.Include(a => a.AppUser).Where(a => a.AppUser.UserName == userName).ToListAsync();
+        }
+
         public async Task<List<Post>> GetAllFromUserAsync(string userId)
         {
             return await _context.Posts.Where(a => a.AppUserId == userId).ToListAsync();
@@ -47,6 +53,11 @@ namespace TwitterAppWebApi.Repository.PostRepositories
         public async Task<Post> GetByIdAsync(int id)
         {
             return await _context.Posts.Include(a => a.AppUser).FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task<Post> GetByUserNameAsync(string userName)
+        {
+            return await _context.Posts.Include(a => a.AppUser).FirstOrDefaultAsync(c => c.AppUser.UserName == userName);
         }
 
         public async Task<Post> UpdateAsync(int id, Post post)
