@@ -1,27 +1,12 @@
-"use client"
+"use server"
 
-import { useRouter } from "next/router"
-import { SyntheticEvent, useState } from "react"
+import { cookies } from 'next/headers'
 
 
-export async function Signup() {
+export async function TokenCookie(token:any) {
     
-    const [name, setName] = useState()
-    const [password, setPassword] = useState()
+    const cookieStore = await cookies()
+
+    await cookieStore.set("token", token)
     
-    const router = useRouter()
-
-    const submit = async () => {
-
-        await fetch("http://localhost:5130/api/account/login", {
-            method:"POST",
-            headers:{'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                name,
-                password
-            })
-        })
-    }
-    console.log(name, password)
-    await submit()
 }

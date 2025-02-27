@@ -19,7 +19,7 @@ export default function RootLayout({
 
     return (
       <html lang="en">
-        <body>
+        <body className="bg-black text-white">
             <div className="bg-gray-900 text-white">
                 {navLinks.map((link) => {
 

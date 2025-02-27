@@ -1,25 +1,43 @@
 "use client"
-import { useRouter } from "next/router";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { SyntheticEvent, useState } from "react";
+import { TokenCookie } from "./action";
 
 
 export default function Login() {
 
   const [username, setName] = useState<string>()
   const [password, setPassword] = useState<string>()
+  const router = useRouter()
 
-  const submit = async () => {
+  const submit = async (e:SyntheticEvent) => {
+    e.preventDefault()
     
-    await console.log(username, password)
+    console.log(JSON.stringify({
+      userName:username,
+      passWord:password
+    }))
 
-    await fetch("http://localhost:5130/api/account/login", {
+    try{
+      const data =  await fetch("http://localhost:5130/api/account/login", {
         method:"POST",
-        headers:{'Content-Type': 'application/json'},
+        headers:{"Content-Type": "application/json; charset=utf-8"},
+        credentials:"same-origin",
         body: JSON.stringify({
-            username,
-            password
+            userName:username,
+            passWord:password
         })
-    })
+      })
+
+      const user = await data.json()
+
+      if(user){
+        await TokenCookie(user.token)
+        await router.push('/')
+      }
+    }catch(e){
+      alert("Tu ne tes pas co")
+    }
   }
 
   return (
@@ -43,6 +61,7 @@ export default function Login() {
                   type="text"
                   name="username"
                   id="username"
+                  onChange={e=> setName(e.target.value)}
                   className="sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Username"
                 />
@@ -59,7 +78,7 @@ export default function Login() {
                   name="password"
                   id="password"
                   placeholder="••••••••"
-                  onChange={e=> setName(e.target.value)}
+                  onChange={e=> setPassword(e.target.value)}
                   className="sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
@@ -98,7 +117,7 @@ export default function Login() {
               <p className="text-sm font-light text-gray-400">
                 Don’t have an account yet?{" "}
                 <a
-                  href="#"
+                  href="/register"
                   className="font-medium hover:underline text-primary-500"
                 >
                   Sign up
