@@ -39,10 +39,16 @@ namespace TwitterAppWebApi.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
+                Random random = new Random();
+                int nbpseudo = random.Next(1000, 10000);
+
+                var pseudo = "@" + registerDTO.UserName+nbpseudo.ToString();
+
                 var appUser = new AppUser
                 {
                     UserName = registerDTO.UserName,
-                    Email = registerDTO.Email
+                    Email = registerDTO.Email,
+                    Pseudo = pseudo,
                 };
 
                 var userVerification = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == registerDTO.Email);
@@ -91,9 +97,9 @@ namespace TwitterAppWebApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName.ToLower() == loginDTO.UserName.ToLower());
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDTO.UserName);
 
-            if (user == null)
+            if (user == null || !user.UserName.Equals(loginDTO.UserName))
                 return Unauthorized("Invalid username !");
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TwitterAppWebApi.Data;
 
@@ -11,9 +12,11 @@ using TwitterAppWebApi.Data;
 namespace TwitterAppWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250303111801_update_post")]
+    partial class update_post
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,13 +54,13 @@ namespace TwitterAppWebApi.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4965e3c6-ce0f-4b70-b943-a18d54122838",
+                            Id = "88e71e39-128f-4aad-8e45-7c45d61c68f2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "e4ec1e78-6d20-4465-b2e1-338bf6501858",
+                            Id = "18cf3b82-ddf7-4cb9-bd17-05eabe453958",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -214,10 +217,6 @@ namespace TwitterAppWebApi.Migrations
                     b.Property<string>("Profil")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Pseudo")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");

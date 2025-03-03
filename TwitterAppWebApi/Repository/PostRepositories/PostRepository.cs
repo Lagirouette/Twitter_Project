@@ -69,7 +69,6 @@ namespace TwitterAppWebApi.Repository.PostRepositories
                 return null;
             }
 
-            existingPost.Title = post.Title;
             existingPost.Body = post.Body;
 
             await _context.SaveChangesAsync();

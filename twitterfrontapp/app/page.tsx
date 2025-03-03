@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import Sidebar from "@/components/_sidebar/Sidebar";
 import PostTextArea from "@/components/_post/PostTextArea";
 import EngagingBar from "@/components/_EngagingBar/page";
@@ -6,22 +6,12 @@ import LeftSideBar from "@/components/_lsidebar/lsidebar";
 import { LogoutButton } from "@/components/_buttons/logout";
 import { cookies } from "next/headers";
 import LoginButton from "@/components/_buttons/login";
-import { RecupUserInfos } from "@/Token/RecupUserName";
 import Link from "next/link";
+import { GetAllPost } from "@/api/ApiCalls";
 
 
-
-type Post = {
-    createdBy: string;
-    createOn: Date;
-    title: string;
-    body: string;
-}
-
-export default async function PostFeed() {
-    const response = await fetch("http://localhost:5130/api/post")
-    const posts: Post[] = await response.json()
-    console.log(posts)
+export default async function Feed() {
+    const posts= await GetAllPost()
     const cookieStore = await cookies()
     const token = await cookieStore.get("token")
 

@@ -18,3 +18,16 @@ export async function RecupUserInfos(){
 
     return decoded.given_name
 }
+
+export async function RecupPseudo(){
+    const cookieStore = await cookies()
+    const token = await cookieStore.get("token")
+
+    const S_token = JSON.stringify(token)
+
+    const decoded = jwtDecode(S_token);
+    
+    // const J_token = JSON.stringify(decoded)
+
+    return decoded.unique_name
+}

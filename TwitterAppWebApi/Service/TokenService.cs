@@ -24,6 +24,7 @@ namespace TwitterAppWebApi.Service
             {
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.GivenName, user.UserName),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user?.Pseudo),
             };
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
@@ -31,7 +32,7 @@ namespace TwitterAppWebApi.Service
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddMinutes(10),
+                Expires = DateTime.Now.AddMinutes(25),
                 SigningCredentials = creds,
                 Issuer = _config["JWT:Issuer"],
                 Audience = _config["JWT:Audience"]

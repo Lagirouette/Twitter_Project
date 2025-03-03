@@ -9,5 +9,8 @@ namespace TwitterAppWebApi.Models
 
         [MaxLength(100)]
         public string? Profil {  get; set; }
+
+        [MaxLength(30)]
+        public string? Pseudo {  get; set; }
     }
 }

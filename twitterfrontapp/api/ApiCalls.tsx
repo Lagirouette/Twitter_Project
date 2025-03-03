@@ -1,6 +1,17 @@
+import { RecupRealToken } from "@/Token/RecupToken";
 
-export function GetAllPost(){
+type Post = {
+    createdBy: string;
+    createOn: Date;
+    title: string;
+    body: string;
+}
 
+export async function GetAllPost(){
+    const response = await fetch("http://localhost:5130/api/post")
+    const posts: Post[] = await response.json()
+    
+    return posts 
 }
 
 export async function LoginTwitter(username: string | undefined, password: string | undefined){ 
@@ -16,14 +27,17 @@ export async function LoginTwitter(username: string | undefined, password: strin
     return data
 }
 
-export async function CreateNewPost(username: string , password: string){
-    const data =  await fetch("http://localhost:5130/api/account/login", {
+export async function CreateNewPost(tweet: string | undefined){
+    const token = await RecupRealToken()
+    const data =  await fetch("http://localhost:5130/api/post", {
         method:"POST",
-        headers:{"Content-Type": "application/json; charset=utf-8"},
+        headers:{
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": `Bearer ${token}`
+        },
         credentials:"same-origin",
         body: JSON.stringify({
-            userName:username,
-            passWord:password
+            body:tweet
         })
     })
     return data

@@ -11,8 +11,7 @@ namespace TwitterAppWebApi.Mappers
             {
                 Body = postModel.Body,
                 CreatedBy = postModel.AppUser.UserName,
-                CreatOn = postModel.CreatOn,
-                Title = postModel.Title,
+                CreatOn = postModel.CreatOn
             };
         }
 
@@ -20,7 +19,6 @@ namespace TwitterAppWebApi.Mappers
         {
             return new Post
             {
-                Title = createdPost.Title,
                 Body = createdPost.Body
             };
         }
@@ -29,7 +27,6 @@ namespace TwitterAppWebApi.Mappers
         {
             return new Post
             {
-                Title = updatedPost.Title,
                 Body = updatedPost.Body
             };
         }
