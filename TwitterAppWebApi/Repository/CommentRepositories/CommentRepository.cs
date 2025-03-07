@@ -40,6 +40,11 @@ namespace TwitterAppWebApi.Repository.CommentRepositories
             return await _context.Comments.Include(a => a.AppUser).ToListAsync();
         }
 
+        public async Task<List<Comment>> GetAllByPostAsync(int postId)
+        {
+            return await _context.Comments.Where(a => a.PostId == postId).Include(a => a.AppUser).ToListAsync();
+        }
+
         public async Task<Comment> GetbyIdAsync(int id)
         {
             return await _context.Comments.Include(a => a.AppUser).FirstOrDefaultAsync(c => c.Id == id);

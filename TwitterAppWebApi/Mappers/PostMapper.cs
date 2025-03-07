@@ -9,6 +9,7 @@ namespace TwitterAppWebApi.Mappers
         {
             return new PostDTO
             {
+                Id = postModel.Id,
                 Body = postModel.Body,
                 CreatedBy = postModel.AppUser.UserName,
                 CreatOn = postModel.CreatOn
