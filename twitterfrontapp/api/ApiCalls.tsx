@@ -1,16 +1,19 @@
 import { RecupRealToken } from "@/Token/RecupToken";
+import { DateArg, DateValues } from "date-fns";
+import { DateSchema } from "yup";
 
 type Post = {
     id: number;
     createdBy: string;
-    createOn: Date;
+    creatOn: string;
     body: string;
+    createdByPseudo:string;
 }
 
 type Comment = {
     id: number;
     createdBy: string;
-    createOn: Date;
+    createOn: string;
     postId: number;
     content: string;
 }
@@ -18,14 +21,16 @@ type Comment = {
 export async function GetAllPost(){
     const response = await fetch("http://localhost:5130/api/post")
     const posts: Post[] = await response.json()
-    
+    console.log(posts)
     return posts 
 }
 
 export async function GetPost(id: number){
     const response = await fetch(`http://localhost:5130/api/post/${id}`)
     const posts: Post = await response.json()
-    
+    console.log(posts)
+    console.log(posts.creatOn)
+
     return posts
 }
 
@@ -79,4 +84,11 @@ export async function CreateNewPost(tweet: string | undefined){
         })
     })
     return data
+}
+
+export async function GetLike(id: number){
+    const response = await fetch(`http://localhost:5130/api/like/${id}`)
+    const nbLike: number = await response.json()
+    
+    return nbLike
 }

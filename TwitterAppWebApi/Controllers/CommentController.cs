@@ -45,6 +45,18 @@ namespace TwitterAppWebApi.Controllers
             return Ok(commentsDto);
         }
 
+        [HttpGet("nb/{postId:int}")]
+        public async Task<IActionResult> GetByNbCommentPerPostAll([FromRoute] int postId)
+        {
+            var comments = await _commentRepository.GetAllByPostAsync(postId);
+            if (comments == null)
+            {
+                return Ok(0);
+            }
+            var nbComments = comments.Count();
+            return Ok(nbComments);
+        }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {

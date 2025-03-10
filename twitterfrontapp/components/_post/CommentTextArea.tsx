@@ -15,14 +15,14 @@ export default function CommentTextArea({postId}:{postId:number}){
         const token = await RecupTokenBool()
 
         try{
-           if(token){ 
-            await CreateNewComment(tweet,postId)
-            await router.refresh()
-          }
+            if(token){ 
+                await CreateNewComment(tweet,postId)
+                await router.refresh()
+            }
         }catch(e){
           alert("Tu ne tes pas co")
         }
-      }
+    }
     
   return (
     <>

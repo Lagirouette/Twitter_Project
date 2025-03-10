@@ -1,15 +1,13 @@
-"use client"
+
 import { GetAllPost } from "@/api/ApiCalls";
 import Link from "next/link";
 import { Suspense } from "react";
-import EngagingBar from "./_EngagingBar/page";
-import { useRouter } from "next/navigation";
-
+import EngagingBarPost from "./_EngagingBar/EngagementBar";
+import { formatDate } from "@/function/DateFormat";
 
 const posts= await GetAllPost()
 
-export default function ListPost() {
-    const router = useRouter()
+export default async function ListPost() {
     return (
         <div>
             {posts.map((post) => (
@@ -26,11 +24,13 @@ export default function ListPost() {
                         }
                         >
                         <Link href={"profilePage/"+ post.createdBy}>
-                            <p onClick={() => router.push("profilePage/"+ post.createdBy)}><span className="text-xl">{post.createdBy} </span><span className="text-sm text-gray-500"> @{post.createdBy}</span></p>
+                            <p ><span className="text-xl">{post.createdBy} </span><span className="text-sm text-gray-500"> {post.createdByPseudo}</span> <span> ⸱ {formatDate(post.creatOn)}</span></p>
                         </Link>
                         </Suspense>
-                        <p className="text-white mb-4 leading-relaxed" onClick={() => router.push("tweet/"+post.id)}>{post.body}</p>
-                        <EngagingBar/>
+                        <Link href={"tweet/"+post.id}>
+                            <p className="text-white mb-4 leading-relaxed">{post.body}</p>
+                        </Link>
+                        <EngagingBarPost postId={post.id}/>
                     </div>
                 </div>
             ))}
