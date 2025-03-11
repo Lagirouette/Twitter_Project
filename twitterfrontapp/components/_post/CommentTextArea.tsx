@@ -20,7 +20,7 @@ export default function CommentTextArea({postId}:{postId:number}){
                 await router.refresh()
             }
         }catch(e){
-          alert("Tu ne tes pas co")
+          await router.push("/login")
         }
     }
     

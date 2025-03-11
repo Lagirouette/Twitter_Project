@@ -17,10 +17,10 @@ export default async function Feed() {
                 <Sidebar/>
             </div>
             <div className="col-span-5 grid-cols-2 flex-none">
-                <div className="flex shadow-md p-3 border border-solid border-gray-700">
+                <div className="flex shadow-md p-3 border-x border-solid border-gray-700">
                     <h1 className="font-bold text-xl">Home</h1>
                     <div className="ms-auto">
-                        {!token ? <LoginButton/> : <LogoutButton/> }
+                        {token && <LogoutButton/> }
                     </div>
                 </div>
                 <div className="shadow-md p-5 border border-b-8 border-solid border-gray-700">

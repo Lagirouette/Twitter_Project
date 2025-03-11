@@ -22,7 +22,7 @@ namespace TwitterAppWebApi.Repository.LikeRepositories
 
         public async Task<Like> DeleteAsync(string userId, int postId)
         {
-            var existingLike = await _context.Likes.FirstOrDefaultAsync(c => c.Id == postId && c.LikeBy == userId);
+            var existingLike = await _context.Likes.FirstOrDefaultAsync(c => c.PostId == postId && c.LikeBy == userId);
 
             if (existingLike == null)
             {

@@ -1,5 +1,6 @@
-import { RecupRealToken } from "@/Token/RecupToken";
+import { RecupRealToken, RecupToken, RecupTokenBool } from "@/Token/RecupToken";
 import { DateArg, DateValues } from "date-fns";
+import { errorToJSON } from "next/dist/server/render";
 import { DateSchema } from "yup";
 
 type Post = {
@@ -28,9 +29,6 @@ export async function GetAllPost(){
 export async function GetPost(id: number){
     const response = await fetch(`http://localhost:5130/api/post/${id}`)
     const posts: Post = await response.json()
-    console.log(posts)
-    console.log(posts.creatOn)
-
     return posts
 }
 
@@ -51,7 +49,13 @@ export async function LoginTwitter(username: string | undefined, password: strin
             passWord:password
         })
     })
-    return data
+
+    if(data.ok){
+        const resp = await data.json()
+        return resp
+    }else{
+        throw new Error("Failed to login")
+    }
 }
 
 export async function CreateNewComment(comment: string | undefined, postId: number){
@@ -91,4 +95,53 @@ export async function GetLike(id: number){
     const nbLike: number = await response.json()
     
     return nbLike
+}
+
+export async function PostLike(id: number){
+    const token = await RecupRealToken()
+    const response = await fetch(`http://localhost:5130/api/like/${id}`, {
+        method:"POST",
+        headers:{
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": `Bearer ${token}`
+        },
+        credentials:"same-origin"
+    })
+    const nbLike = await response.json()
+    
+    return nbLike
+}
+
+export async function DeleteLike(id: number){
+    const token = await RecupRealToken()
+    await fetch(`http://localhost:5130/api/like/${id}`, {
+        method:"DELETE",
+        headers:{
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": `Bearer ${token}`
+        },
+        credentials:"same-origin"
+    })
+}
+
+
+export async function GetIfLiked(id: number){
+    //if the user liked u get a false. If he didnt liked u get True and ur good to go
+    const existentToken = await RecupTokenBool()
+    if(existentToken == true){
+        const token = await RecupRealToken()
+        const response = await fetch(`http://localhost:5130/api/like/status/${id}`, {
+            method:"GET",
+            headers:{
+                "Content-Type": "application/json; charset=utf-8",
+                "Authorization": `Bearer ${token}`
+            },
+            credentials:"same-origin"
+        })
+        const statusLike : boolean = await response.json()
+
+        return statusLike
+    }else{
+        console.log("erreur !!")
+    }
 }

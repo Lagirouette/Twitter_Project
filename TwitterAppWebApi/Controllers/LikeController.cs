@@ -33,6 +33,28 @@ namespace TwitterAppWebApi.Controllers
             return Ok(likesNumber);
         }
 
+        [HttpGet("status/{postId:int}")]
+        [Authorize]
+        public async Task<IActionResult> GetStatusOfLikes([FromRoute] int postId)
+        {
+            Like like = new();
+
+            var username = User.FindFirst(ClaimTypes.GivenName)?.Value;
+            var appUser = await _userManager.FindByNameAsync(username);
+
+            like.LikeBy = appUser.Id;
+            like.PostId = postId;
+
+            var verification = await _likeRepository.GetLikeAsync(like);
+
+            if (verification == null)
+            {
+                return Ok(true);
+            }
+
+            return Ok(false);
+        }
+
         [HttpPost("{postId:int}")]
         [Authorize]
         public async Task<IActionResult> Create([FromRoute] int postId)
@@ -54,7 +76,7 @@ namespace TwitterAppWebApi.Controllers
                 return Ok(like.toLikeDto());
             }
 
-            return BadRequest();
+            return BadRequest("You already liked it");
         }
 
         [HttpDelete("{postId:int}")]
@@ -67,7 +89,8 @@ namespace TwitterAppWebApi.Controllers
             var username = User.FindFirst(ClaimTypes.GivenName)?.Value;
             var appUser = await _userManager.FindByNameAsync(username);
 
-            var model = await _likeRepository.DeleteAsync(appUser.Id, postId);
+            await _likeRepository.DeleteAsync(appUser.Id, postId);
+
             return Ok();
         }
     }

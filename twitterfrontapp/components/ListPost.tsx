@@ -24,7 +24,7 @@ export default async function ListPost() {
                         }
                         >
                         <Link href={"profilePage/"+ post.createdBy}>
-                            <p ><span className="text-xl">{post.createdBy} </span><span className="text-sm text-gray-500"> {post.createdByPseudo}</span> <span> ⸱ {formatDate(post.creatOn)}</span></p>
+                            <p ><span className="text-xl">{post.createdBy} </span><span className="text-sm text-gray-500"> {post.createdByPseudo} ⸱ {formatDate(post.creatOn)}</span></p>
                         </Link>
                         </Suspense>
                         <Link href={"tweet/"+post.id}>

@@ -10,6 +10,8 @@ export default function Login() {
 
   const [username, setName] = useState<string>()
   const [password, setPassword] = useState<string>()
+  const [errorID, setErrorID] = useState<string>()
+  const [error, setError] = useState<boolean>()
   const router = useRouter()
 
   const submit = async (e:SyntheticEvent) => {
@@ -17,15 +19,14 @@ export default function Login() {
 
     try{
       const data = await LoginTwitter(username, password)
-
-      const user = await data.json()
-
-      if(user){
-        await TokenCookie(user.token)
+      if(data){
+        setError(false)
+        await TokenCookie(data.token)
         await router.push('/')
       }
-    }catch(e){
-      alert("Tu ne tes pas co")
+    }catch(Error){
+      setError(true)
+      setErrorID("Failed to login !!")
     }
   }
 
@@ -38,6 +39,7 @@ export default function Login() {
             <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white">
               Sign in to your account
             </h1>
+            {error && <p className="text-red-500">{errorID}</p> }
             <form method="POST" className="space-y-4 md:space-y-6"  onSubmit={submit}>
               <div>
                 <label

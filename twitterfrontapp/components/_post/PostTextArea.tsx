@@ -17,7 +17,7 @@ export default function PostTextArea(){
         try{
            if(token){ 
             await CreateNewPost(tweet)
-            await router.push('/')
+            await router.refresh()
           }
         }catch(e){
           alert("Tu ne tes pas co")
