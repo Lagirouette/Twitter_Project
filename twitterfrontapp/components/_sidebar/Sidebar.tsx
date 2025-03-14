@@ -1,20 +1,69 @@
+"use client"
+import { RecupTokenBool } from '@/Token/RecupToken'
 import { RecupPseudo, RecupUserInfos } from '@/Token/RecupUserName'
-import { cookies } from 'next/headers'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+
+export interface MenuItem {
+    title: string;
+    route?: string;
+    children?: MenuItem[];
+  }
+
+const menuItem: MenuItem = 
+  {
+    title: "Products",
+    children: [
+      {
+        title: "Settings",
+        route: "/parameters",
+      },
+      {
+        title: "About Us",
+        route: "",
+      },
+      {
+        title: "Home",
+        route: "",
+      },
+    ],
+  }
+;
 
 
+export default function Sidebar() {
+    const[cookieCheck, setCheck] = useState(false)
+    const[username, setName] = useState("")
+    const[pseudo, setPseudo] = useState("")
 
-export default async function Sidebar() {
-    const cookieStore = await cookies()
+    useEffect(() => {
+        async function ConfigToken() {
+            const cookieCheck = await RecupTokenBool()
+            if (cookieCheck){
+                setCheck(true)
+                const username = await RecupUserInfos()
+                const pseudo  = await RecupPseudo()
 
-    var username : string = "";
-    var pseudo : string = "";
+                setName(username)
+                setPseudo(pseudo)
+            }
+        }
+        ConfigToken()
+      }, []);
 
-    if (cookieStore.has("token")){
-        var username = await RecupUserInfos()
-        var pseudo  = await RecupPseudo()
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const menuItems = menuItem?.children ? menuItem.children : [];
+
+    const toggle = () => {
+        setIsOpen(old => !old);
     }
+
+    const transClass = isOpen
+        ?
+        "flex"
+        :
+        "hidden";
+
 
 
     return (
@@ -76,7 +125,7 @@ export default async function Sidebar() {
                 </a> 
             </div>
             <div className='menu py-4'>
-                <Link className='hover:text-sky-500 flex' href={cookieStore.has("token") ? "/profilePage/"+ username : "/profilepage/notfound"}>
+                <Link className='hover:text-sky-500 flex' href={cookieCheck ? "/profilePage/"+ username : "/profilepage/notfound"}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="mt-1 size-6 h-8 w-8 flex-none">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                     </svg>
@@ -84,15 +133,37 @@ export default async function Sidebar() {
                 </Link> 
             </div>
             <div className='menu py-4'>
-                <a className='hover:text-sky-500 flex' href="">
+                <button className='hover:text-sky-500 flex' onClick={toggle}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="mt-1 size-6 h-8 w-8 flex-none">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
                     <label htmlFor="" className='py-1 pl-4'>More</label>
-                </a> 
+                </button>
+                <div className={`absolute bottom-40 z-40 w-[250px] min-h-[100px] flex flex-col py-4 bg-gray-700 rounded-md ${transClass}`}>
+                    {
+                        menuItems.map(item =>
+                            <Link
+                                key={item.title}
+                                className="hover:bg-zinc-300 hover:text-zinc-500 px-4 py-1"
+                                href={item?.route || ''}
+                                onClick={toggle}
+                            >{item.title}</Link>
+                        )
+                    }
+                </div>
             </div>
+            {
+                isOpen
+                    ?
+                    <div
+                        className="fixed top-0 right-0 bottom-0 left-0 z-20 bg-black/40"
+                        onClick={toggle}
+                    ></div>
+                    :
+                    <></>
+            }
         </div>
-        {cookieStore.has("token") && (
+        {cookieCheck && (
         <div className='flex content-center mt-10'>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 h-8 w-8 flex-none mt-3">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />

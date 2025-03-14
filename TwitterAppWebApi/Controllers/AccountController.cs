@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System.Security.Authentication;
 using System.Security.Claims;
 using TwitterAppWebApi.DTOs.Account;
@@ -29,6 +30,43 @@ namespace TwitterAppWebApi.Controllers
             _passwordHasher = passwordHasher;
             _tokenService = tokenService;
             _postRepository = postRepository;
+        }
+
+        [HttpGet("{userName}")]
+        public async Task<IActionResult> GetProfil([FromRoute] string userName)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
+            
+            return Ok(
+                new AccountDTO
+                {
+                    Id = user.Id,
+                    Pseudo = user.Pseudo,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Profil = user.Profil
+                }
+            ); 
+        }
+
+        [HttpGet("id/{userName}")]
+        public async Task<IActionResult> GetIDProfil([FromRoute] string userName)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
+
+            return Ok(
+                new AccountDTO
+                {
+                    Id = user.Id,
+                    UserName = user.UserName
+                }
+            );
         }
 
         [HttpPost("register")]
@@ -120,7 +158,7 @@ namespace TwitterAppWebApi.Controllers
         [HttpPut("update")]
         public async Task<IActionResult> Update(string email, string password)
         {
-            var user = await _userManager.FindByIdAsync(email);
+            var user = await _userManager.FindByEmailAsync(email);
 
             if (user != null)
             {

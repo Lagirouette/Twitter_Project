@@ -69,7 +69,39 @@ namespace TwitterAppWebApi.Controllers
             return Ok(follower);
         }
 
-        [HttpPost]
+        [HttpGet("followers/{userId}")]
+        public async Task<IActionResult> GetAllUserFollowerLikes(string userId)
+        {
+            var follower = await _followRepository.GetAllFollowerAsync(userId);
+
+            return Ok(follower);
+        }
+
+        [HttpGet("nbfollowers/{userId}")]
+        public async Task<IActionResult> GetNbsUserFollowerLikes(string userId)
+        {
+            var follower = await _followRepository.GetNumberFollowerAsync(userId);
+
+            return Ok(follower);
+        }
+
+        [HttpGet("followings/{userId}")]
+        public async Task<IActionResult> GetAllUserFollowingsLikes(string userId)
+        {
+            var follower = await _followRepository.GetAllFollowingAsync(userId);
+
+            return Ok(follower);
+        }
+
+        [HttpGet("nbsfollowings/{userId}")]
+        public async Task<IActionResult> GetNbsUserFollowingsLikes(string userId)
+        {
+            var follower = await _followRepository.GetNumberFollowingAsync(userId);
+
+            return Ok(follower);
+        }
+
+        [HttpPost("{userId}")]
         [Authorize]
         public async Task<IActionResult> Create(string userId)
         {

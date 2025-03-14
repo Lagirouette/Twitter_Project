@@ -1,23 +1,11 @@
-import AuthorFetching from "@/components/_authorFetching/author";
 import Sidebar from "@/components/_sidebar/Sidebar";
 import { Suspense } from "react";
 import EngagingBar from "@/components/_EngagingBar/page";
 import LeftSideBar from "@/components/_lsidebar/lsidebar";
-import AuthorName from "@/components/_authorFetching/authorName";
 import BackButton from "@/components/_buttons/backButton";
 import Link from "next/link";
-
-type Post = {
-    createdBy: string;
-    createOn: Date;
-    title: string;
-    body: string;
-}
-
-async function GetUserPosts(userId:string) {
-    const response = await fetch(`http://localhost:5130/api/post/${userId}`)
-    return response.json()
-}
+import { GetUserPosts } from "@/api/ApiCalls";
+import EngagingBarPost from "@/components/_EngagingBar/EngagementBar";
 
 export default async function ProfilePage({
     params,
@@ -53,13 +41,13 @@ export default async function ProfilePage({
                             <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                             </svg>
                         </a> 
-                        <button className=' bg-sky-500 hover:bg-sky-800 rounded-full py-2 px-3  font-bold'>Follow</button>
+                        <button className=' bg-sky-500 hover:bg-sky-800 rounded-full py-2 px-3 mr-2 font-bold'>Follow</button>
                     </div>
                 </div>
                 <div className="shadow-md p-3 border-b border-x border-solid border-gray-800">
                     <h1 className="font-bold text-xl">{id}</h1>
                 </div>
-                {post.map((post : Post) => (
+                {post.map((post) => (
                     <div className="flex shadow-md p-4 border border-solid border-gray-700">
                         <div className="px-2">
                             <svg xmlns="www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 h-8 w-8 flex-none">
@@ -77,7 +65,7 @@ export default async function ProfilePage({
                                 </Suspense>
                                 <p className="text-white mb-4 leading-relaxed">{post.body}</p>
                             </Link>
-                            <EngagingBar/>
+                            <EngagingBarPost postId={post.id}/>
                         </div>
                     </div>
                 ))}

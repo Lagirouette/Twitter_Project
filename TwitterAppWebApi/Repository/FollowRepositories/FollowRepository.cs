@@ -37,12 +37,12 @@ namespace TwitterAppWebApi.Repository.FollowRepositories
 
         public async Task<List<Follow>> GetAllFollowerAsync(string userId)
         {
-            return await _context.Follows.Where(a => a.UserId == userId).ToListAsync();
+            return await _context.Follows.Include(a => a.User).Where(a => a.UserId == userId).ToListAsync();
         }
 
         public async Task<List<Follow>> GetAllFollowingAsync(string userId)
         {
-            return await _context.Follows.Where(a => a.Followedby == userId).ToListAsync();
+            return await _context.Follows.Include(a => a.User).Where(a => a.Followedby == userId).ToListAsync();
         }
 
         public async Task<Follow> GetFollowAsync(string Followedby, string UserId)

@@ -1,7 +1,12 @@
 import { RecupRealToken, RecupToken, RecupTokenBool } from "@/Token/RecupToken";
-import { DateArg, DateValues } from "date-fns";
-import { errorToJSON } from "next/dist/server/render";
-import { DateSchema } from "yup";
+
+type User = {
+    id: number;
+    userName: string;
+    pseudo: string;
+    email: number;
+    profil: string;
+}
 
 type Post = {
     id: number;
@@ -19,11 +24,28 @@ type Comment = {
     content: string;
 }
 
+export async function GetUser(userName:string){
+    const response = await fetch(`http://localhost:5130/api/account/${userName}`)
+    const user: User = await response.json()
+    return user 
+}
+
+export async function GetIdUser(userName:string){
+    const response = await fetch(`http://localhost:5130/api/account/id/${userName}`)
+    const user: User = await response.json()
+    return user 
+}
+
 export async function GetAllPost(){
     const response = await fetch("http://localhost:5130/api/post")
     const posts: Post[] = await response.json()
-    console.log(posts)
     return posts 
+}
+
+export async function GetUserPosts(userId:string) {
+    const response = await fetch(`http://localhost:5130/api/post/${userId}`)
+    const posts: Post[] = await response.json()
+    return posts
 }
 
 export async function GetPost(id: number){
@@ -144,4 +166,19 @@ export async function GetIfLiked(id: number){
     }else{
         console.log("erreur !!")
     }
+}
+
+export async function Follow(userName: string){
+    const token = await RecupRealToken()
+    const user = await GetIdUser(userName)
+    
+    const data =  await fetch(`http://localhost:5130/api/follow/${user.id}`, {
+        method:"POST",
+        headers:{
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": `Bearer ${token}`
+        },
+        credentials:"same-origin"
+    })
+    return data
 }
