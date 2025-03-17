@@ -117,17 +117,20 @@ namespace TwitterAppWebApi.Controllers
 
             if (verification == null)
             {
-                await _followRepository.CreateAsync(follow);
-
+                var create = await _followRepository.CreateAsync(follow);
+                if (create == null)
+                {   
+                    return BadRequest("You cant follow yourself !");
+                }
                 return Ok(follow.toFollowDto());
             }
 
             return BadRequest();
         }
 
-        [HttpDelete]
+        [HttpDelete("{userId}")]
         [Authorize]
-        public async Task<IActionResult> Delete(string followerId)
+        public async Task<IActionResult> Delete(string userId)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -135,7 +138,7 @@ namespace TwitterAppWebApi.Controllers
             var username = User.FindFirst(ClaimTypes.GivenName)?.Value;
             var appUser = await _userManager.FindByNameAsync(username);
 
-            var model = await _followRepository.DeleteAsync(appUser.Id, followerId);
+            await _followRepository.DeleteAsync(appUser.Id, userId);
             return Ok();
         }
 

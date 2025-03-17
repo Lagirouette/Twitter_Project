@@ -1,7 +1,7 @@
 import { RecupRealToken, RecupToken, RecupTokenBool } from "@/Token/RecupToken";
 
 type User = {
-    id: number;
+    id: string;
     userName: string;
     pseudo: string;
     email: number;
@@ -24,16 +24,29 @@ type Comment = {
     content: string;
 }
 
+type Follow = {
+    id: number;
+    followedby: string;
+    userId: string;
+    user: User;
+}
+
 export async function GetUser(userName:string){
     const response = await fetch(`http://localhost:5130/api/account/${userName}`)
     const user: User = await response.json()
     return user 
 }
 
-export async function GetIdUser(userName:string){
-    const response = await fetch(`http://localhost:5130/api/account/id/${userName}`)
+export async function GetUserFromId(id:string){
+    const response = await fetch(`http://localhost:5130/api/account/id/${id}`)
     const user: User = await response.json()
-    return user 
+    return user.id 
+}
+
+export async function GetIdUser(userName:string){
+    const response = await fetch(`http://localhost:5130/api/account/getid/${userName}`)
+    const user: User = await response.json()
+    return user.id 
 }
 
 export async function GetAllPost(){
@@ -172,7 +185,7 @@ export async function Follow(userName: string){
     const token = await RecupRealToken()
     const user = await GetIdUser(userName)
     
-    const data =  await fetch(`http://localhost:5130/api/follow/${user.id}`, {
+    const data =  await fetch(`http://localhost:5130/api/follow/${user}`, {
         method:"POST",
         headers:{
             "Content-Type": "application/json; charset=utf-8",
@@ -181,4 +194,42 @@ export async function Follow(userName: string){
         credentials:"same-origin"
     })
     return data
+}
+
+export async function Unfollow(userName: string){
+    const token = await RecupRealToken()
+    const user = await GetIdUser(userName)
+    
+    await fetch(`http://localhost:5130/api/follow/${user}`, {
+        method:"DELETE",
+        headers:{
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": `Bearer ${token}`
+        },
+        credentials:"same-origin"
+    })
+}
+
+export async function GetFollowers(userName:string){
+    const response = await fetch(`http://localhost:5130/api/follow/followers/${userName}`)
+    const user: User = await response.json()
+    return user.id 
+}
+
+export async function GetNumberOfFollowers(userName:string){
+    const response = await fetch(`http://localhost:5130/api/follow/nbfollowers/${userName}`)
+    const NumberOfFollowers: number = await response.json()
+    return NumberOfFollowers
+}
+
+export async function GetFollowings(userName:string){
+    const response = await fetch(`http://localhost:5130/api/follow/followings/${userName}`)
+    const user: User = await response.json()
+    return user.id 
+}
+
+export async function GetNumberFollowings(userName:string){
+    const response = await fetch(`http://localhost:5130/api/follow/nbsfollowings/${userName}`)
+    const NumberFollowings: number = await response.json()
+    return NumberFollowings
 }

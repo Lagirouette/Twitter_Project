@@ -52,7 +52,7 @@ namespace TwitterAppWebApi.Controllers
             ); 
         }
 
-        [HttpGet("id/{userName}")]
+        [HttpGet("getid/{userName}")]
         public async Task<IActionResult> GetIDProfil([FromRoute] string userName)
         {
             if (!ModelState.IsValid)
@@ -65,6 +65,26 @@ namespace TwitterAppWebApi.Controllers
                 {
                     Id = user.Id,
                     UserName = user.UserName
+                }
+            );
+        }
+
+        [HttpGet("id/{id}")]
+        public async Task<IActionResult> GetUserById([FromRoute] string id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+            return Ok(
+                new AccountDTO
+                {
+                    Id = user.Id,
+                    Pseudo = user.Pseudo,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Profil = user.Profil
                 }
             );
         }

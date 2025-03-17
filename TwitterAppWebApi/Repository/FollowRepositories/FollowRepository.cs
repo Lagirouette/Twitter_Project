@@ -15,9 +15,14 @@ namespace TwitterAppWebApi.Repository.FollowRepositories
 
         public async Task<Follow> CreateAsync(Follow follow)
         {
+            if (follow.Followedby == follow.UserId)
+            {
+                return null;
+            }
+
             await _context.Follows.AddAsync(follow);
-            await _context.SaveChangesAsync();
-            return follow;
+                await _context.SaveChangesAsync();
+                return follow;
         }
 
         public async Task<Follow> DeleteAsync(string userId, string followedby)
@@ -37,12 +42,12 @@ namespace TwitterAppWebApi.Repository.FollowRepositories
 
         public async Task<List<Follow>> GetAllFollowerAsync(string userId)
         {
-            return await _context.Follows.Include(a => a.User).Where(a => a.UserId == userId).ToListAsync();
+            return await _context.Follows.Where(a => a.UserId == userId).ToListAsync();
         }
 
         public async Task<List<Follow>> GetAllFollowingAsync(string userId)
         {
-            return await _context.Follows.Include(a => a.User).Where(a => a.Followedby == userId).ToListAsync();
+            return await _context.Follows.Where(a => a.Followedby == userId).ToListAsync();
         }
 
         public async Task<Follow> GetFollowAsync(string Followedby, string UserId)
