@@ -6,6 +6,7 @@ import BackButton from "@/components/_buttons/backButton";
 import Link from "next/link";
 import { GetUserPosts } from "@/api/ApiCalls";
 import EngagingBarPost from "@/components/_EngagingBar/EngagementBar";
+import FollowButton from "@/components/_buttons/followButton";
 
 export default async function ProfilePage({
     params,
@@ -41,7 +42,7 @@ export default async function ProfilePage({
                             <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                             </svg>
                         </a> 
-                        <button className=' bg-sky-500 hover:bg-sky-800 rounded-full py-2 px-3 mr-2 font-bold'>Follow</button>
+                        <FollowButton name={id} />
                     </div>
                 </div>
                 <div className="shadow-md p-3 border-b border-x border-solid border-gray-800">

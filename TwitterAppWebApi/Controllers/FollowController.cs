@@ -59,7 +59,7 @@ namespace TwitterAppWebApi.Controllers
 
         [HttpGet("nbsfollowings")]
         [Authorize]
-        public async Task<IActionResult> GetNbsFollowingsLikes()
+        public async Task<IActionResult> GetNbsFollowings()
         {
             var username = User.FindFirst(ClaimTypes.GivenName)?.Value;
             var appUser = await _userManager.FindByNameAsync(username);
@@ -70,7 +70,7 @@ namespace TwitterAppWebApi.Controllers
         }
 
         [HttpGet("followers/{userId}")]
-        public async Task<IActionResult> GetAllUserFollowerLikes(string userId)
+        public async Task<IActionResult> GetAllUserFollower(string userId)
         {
             var follower = await _followRepository.GetAllFollowerAsync(userId);
 
@@ -78,7 +78,7 @@ namespace TwitterAppWebApi.Controllers
         }
 
         [HttpGet("nbfollowers/{userId}")]
-        public async Task<IActionResult> GetNbsUserFollowerLikes(string userId)
+        public async Task<IActionResult> GetNbsUserFollower(string userId)
         {
             var follower = await _followRepository.GetNumberFollowerAsync(userId);
 
@@ -86,7 +86,7 @@ namespace TwitterAppWebApi.Controllers
         }
 
         [HttpGet("followings/{userId}")]
-        public async Task<IActionResult> GetAllUserFollowingsLikes(string userId)
+        public async Task<IActionResult> GetAllUserFollowings(string userId)
         {
             var follower = await _followRepository.GetAllFollowingAsync(userId);
 
@@ -94,11 +94,31 @@ namespace TwitterAppWebApi.Controllers
         }
 
         [HttpGet("nbsfollowings/{userId}")]
-        public async Task<IActionResult> GetNbsUserFollowingsLikes(string userId)
+        public async Task<IActionResult> GetNbsUserFollowings(string userId)
         {
             var follower = await _followRepository.GetNumberFollowingAsync(userId);
 
             return Ok(follower);
+        }
+
+        [HttpGet("IfUserIsFollowing/{userId}")]
+        [Authorize]
+        public async Task<IActionResult> GetIfUserFollowings(string userId)
+        {
+            var username = User.FindFirst(ClaimTypes.GivenName)?.Value;
+            var appUser = await _userManager.FindByNameAsync(username);
+
+            var follow = await _followRepository.GetFollowAsync(appUser.Id, userId);
+
+            if (follow == null)
+            {
+                return Ok(false);
+            }
+            else
+            {
+                return Ok(true);
+            }
+
         }
 
         [HttpPost("{userId}")]

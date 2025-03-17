@@ -210,6 +210,28 @@ export async function Unfollow(userName: string){
     })
 }
 
+export async function GetIfFollow(userName: string){
+
+    const existentToken = await RecupTokenBool()
+    const userId = await GetIdUser(userName)
+
+    if(existentToken == true){
+        const token = await RecupRealToken()
+        const response = await fetch(`http://localhost:5130/api/follow/IfUserIsFollowing/${userId}`, {
+            method:"GET",
+            headers:{
+                "Content-Type": "application/json; charset=utf-8",
+                "Authorization": `Bearer ${token}`
+            },
+            credentials:"same-origin"
+        })
+        const statusFollow : boolean = await response.json()
+        return statusFollow
+    }else{
+        console.log("erreur !!")
+    }
+}
+
 export async function GetFollowers(userName:string){
     const response = await fetch(`http://localhost:5130/api/follow/followers/${userName}`)
     const user: User = await response.json()
