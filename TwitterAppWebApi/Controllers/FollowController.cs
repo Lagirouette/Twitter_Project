@@ -158,7 +158,7 @@ namespace TwitterAppWebApi.Controllers
             var username = User.FindFirst(ClaimTypes.GivenName)?.Value;
             var appUser = await _userManager.FindByNameAsync(username);
 
-            await _followRepository.DeleteAsync(appUser.Id, userId);
+            await _followRepository.DeleteAsync(userId, appUser.Id);
             return Ok();
         }
 

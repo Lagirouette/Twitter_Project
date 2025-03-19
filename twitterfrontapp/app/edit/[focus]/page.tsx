@@ -1,31 +1,75 @@
 "use client"
 
-import { CreateNewPost } from '@/api/ApiCalls'
-import { RecupTokenBool } from '@/Token/RecupToken'
-import { useRouter } from 'next/navigation'
-import React, { SyntheticEvent, useState } from 'react'
+import { CreateNewPost, UpdateProfile } from "@/api/ApiCalls";
+import BackButton from "@/components/_buttons/backButton";
+import LeftSideBar from "@/components/_lsidebar/lsidebar";
+import Sidebar from "@/components/_sidebar/Sidebar";
+import { RecupTokenBool } from "@/Token/RecupToken";
+import { useRouter } from "next/navigation";
+import { SyntheticEvent, useEffect, useState } from "react";
 
-export default function PostTextArea(){
-    const [tweet, setTweet] = useState("")
+export default function Edit({
+    params,
+}: {
+    params: Promise<{focus:string}>
+}) {
+    const [focus, setFocus] = useState<string>("");
+    const [Input, setInput] = useState("");
     const router = useRouter()
+    
+
+    useEffect(() => {
+        async function SetData() {
+            const {focus} = await params
+            if(focus != "Edit" && focus != "Tweet"){
+                router.push("/notfound")
+            }else{
+                setFocus(focus)
+            }
+        }
+
+        SetData();
+    }, []);
 
     const submit = async (e:SyntheticEvent) => {
         e.preventDefault()
-        
+                
         const token = await RecupTokenBool()
-
-        try{
-           if(token){ 
-            await CreateNewPost(tweet)
-            await router.refresh()
-          }
-        }catch(e){
-          alert("Tu ne tes pas co")
+        if (focus == "Twett"){
+            try{
+                if(token){ 
+                    await CreateNewPost(Input)
+                    await router.back()
+                }
+            }catch(e){
+                router.push("/login")
+            }
         }
-      }
+
+        if (focus == "Edit"){
+            try{
+                if(token){ 
+                    await UpdateProfile(Input)
+                    await router.back()
+                }
+            }catch(e){
+                router.push("/login")
+            }
+        }
+        
+    }
     
-  return (
-    <>
+    return (
+        <div className="bg-black grid grid-cols-10 text-white">
+            <div className="col-span-2 pl-10 pt-2 text-xl font-bold flex-none">
+                <Sidebar/>
+            </div>
+            <div className="col-span-5 grid-cols-2 flex-none">
+                <div className="flex shadow-md p-3 border border-solid border-gray-800">
+                    <BackButton/>
+                </div>
+                <div className="shadow-md p-5 border border-b-8 border-solid border-gray-700">
+                <>
         <form action="" onSubmit={submit}>
             <div className="flex">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 h-8 w-8 flex-none">
@@ -34,9 +78,9 @@ export default function PostTextArea(){
                 <textarea 
                 className="bg-black pl-3 w-full resize-none focus:outline-none focus:border-b" 
                 placeholder="What's happening ? "
-                onChange={e=> setTweet(e.target.value)}
+                onChange={e=> setInput(e.target.value)}
                 />
-                <p className={`${(tweet?.length==0) && 'hidden'} ${(tweet.length>250) && 'text-red-600'} mt-auto font-mono`}>{tweet?.length}/250</p>
+                <p className={`${(Input.length==0) && 'hidden'} ${(Input.length>100) && 'text-red-600'} mt-auto`}>{Input.length}/100</p>
             </div>
             <div className='flex w-full pt-2'>
                 <svg className="size-10 py-2 text-sky-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -51,10 +95,17 @@ export default function PostTextArea(){
                 </svg>
                 <svg className="size-10 py-2 text-sky-500"  viewBox="0 0 24 24"  width="24"  height="24"  xmlns="http://www.w3.org/2000/svg"  fill="none"  stroke="currentColor"  strokeWidth="2">  <circle cx="12" cy="12" r="10" />  <path d="M8 14s1.5 2 4 2 4-2 4-2" />  <line x1="9" y1="9" x2="9.01" y2="9" />  <line x1="15" y1="9" x2="15.01" y2="9" /></svg>
 
-                <button type='submit' className='ms-auto bg-sky-500 hover:bg-sky-800 rounded-full py-2 px-3 place-self-end font-bold'>Tweet</button>
+                <button type='submit' className='ms-auto bg-sky-500 hover:bg-sky-800 rounded-full py-2 px-3 place-self-end font-bold'>{focus}</button>
 
             </div>
         </form>
     </>
-  )
+                </div>
+                
+            </div>
+            <div className="col-span-3 grid-cols-1 mx-5 pt-2">
+                <LeftSideBar/>
+            </div>
+        </div>
+    );
 }

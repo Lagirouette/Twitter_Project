@@ -1,35 +1,7 @@
 import { RecupRealToken, RecupToken, RecupTokenBool } from "@/Token/RecupToken";
+import "@/api/Types"
+import { Comments, Post, User } from "@/api/Types";
 
-type User = {
-    id: string;
-    userName: string;
-    pseudo: string;
-    email: number;
-    profil: string;
-}
-
-type Post = {
-    id: number;
-    createdBy: string;
-    creatOn: string;
-    body: string;
-    createdByPseudo:string;
-}
-
-type Comment = {
-    id: number;
-    createdBy: string;
-    createOn: string;
-    postId: number;
-    content: string;
-}
-
-type Follow = {
-    id: number;
-    followedby: string;
-    userId: string;
-    user: User;
-}
 
 export async function GetUser(userName:string){
     const response = await fetch(`http://localhost:5130/api/account/${userName}`)
@@ -47,6 +19,19 @@ export async function GetIdUser(userName:string){
     const response = await fetch(`http://localhost:5130/api/account/getid/${userName}`)
     const user: User = await response.json()
     return user.id 
+}
+
+export async function UpdateProfile(Profil: string){
+    const token = await RecupRealToken()
+    const data =  await fetch(`http://localhost:5130/api/account/profil?profil=${Profil}`, {
+        method:"PUT",
+        headers:{
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": `Bearer ${token}`
+        },
+        credentials:"same-origin"
+    })
+    return data
 }
 
 export async function GetAllPost(){
@@ -69,7 +54,7 @@ export async function GetPost(id: number){
 
 export async function GetComment(id: number){
     const response = await fetch(`http://localhost:5130/api/comment/all/${id}`)
-    const comments: Comment[] = await response.json()
+    const comments: Comments[] = await response.json()
     
     return comments
 }
@@ -109,7 +94,7 @@ export async function CreateNewComment(comment: string | undefined, postId: numb
     return data
 }
 
-export async function CreateNewPost(tweet: string | undefined){
+export async function CreateNewPost(tweet: string){
     const token = await RecupRealToken()
     const data =  await fetch("http://localhost:5130/api/post", {
         method:"POST",
@@ -198,9 +183,9 @@ export async function Follow(userName: string){
 
 export async function Unfollow(userName: string){
     const token = await RecupRealToken()
-    const user = await GetIdUser(userName)
+    const userId = await GetIdUser(userName)
     
-    await fetch(`http://localhost:5130/api/follow/${user}`, {
+    await fetch(`http://localhost:5130/api/follow/${userId}`, {
         method:"DELETE",
         headers:{
             "Content-Type": "application/json; charset=utf-8",
