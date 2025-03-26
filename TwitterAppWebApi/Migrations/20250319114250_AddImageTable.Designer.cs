@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TwitterAppWebApi.Data;
 
@@ -11,9 +12,11 @@ using TwitterAppWebApi.Data;
 namespace TwitterAppWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250319114250_AddImageTable")]
+    partial class AddImageTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -247,9 +250,6 @@ namespace TwitterAppWebApi.Migrations
                     b.Property<DateTime>("CreatOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ImageId")
-                        .HasColumnType("int");
-
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
@@ -293,9 +293,6 @@ namespace TwitterAppWebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CommentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ContentType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -308,18 +305,7 @@ namespace TwitterAppWebApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PostId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CommentId")
-                        .IsUnique()
-                        .HasFilter("[CommentId] IS NOT NULL");
-
-                    b.HasIndex("PostId")
-                        .IsUnique()
-                        .HasFilter("[PostId] IS NOT NULL");
 
                     b.ToTable("Images");
                 });
@@ -363,9 +349,6 @@ namespace TwitterAppWebApi.Migrations
 
                     b.Property<DateTime>("CreatOn")
                         .HasColumnType("datetime2");
-
-                    b.Property<int?>("ImageId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -455,21 +438,6 @@ namespace TwitterAppWebApi.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TwitterAppWebApi.Models.Image", b =>
-                {
-                    b.HasOne("TwitterAppWebApi.Models.Comment", "Comment")
-                        .WithOne("Image")
-                        .HasForeignKey("TwitterAppWebApi.Models.Image", "CommentId");
-
-                    b.HasOne("TwitterAppWebApi.Models.Post", "Post")
-                        .WithOne("Image")
-                        .HasForeignKey("TwitterAppWebApi.Models.Image", "PostId");
-
-                    b.Navigation("Comment");
-
-                    b.Navigation("Post");
-                });
-
             modelBuilder.Entity("TwitterAppWebApi.Models.Like", b =>
                 {
                     b.HasOne("TwitterAppWebApi.Models.Post", "Post")
@@ -495,16 +463,9 @@ namespace TwitterAppWebApi.Migrations
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("TwitterAppWebApi.Models.Comment", b =>
-                {
-                    b.Navigation("Image");
-                });
-
             modelBuilder.Entity("TwitterAppWebApi.Models.Post", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("Image");
                 });
 #pragma warning restore 612, 618
         }

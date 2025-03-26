@@ -8,5 +8,6 @@ namespace TwitterAppWebApi.DTOs.Post
         [MinLength(5, ErrorMessage = "This is too short")]
         [MaxLength(280, ErrorMessage = "Tweet cannot be over 280 characters")]
         public string Body { get; set; } = string.Empty;
+
     }
 }

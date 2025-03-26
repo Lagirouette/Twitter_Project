@@ -1,17 +1,29 @@
-import { notFound } from "next/navigation";
+"use client"
+import { useEffect, useState } from 'react';
 
-export default async function Page({params} : {
-    params: Promise<{productId: any}>
+export default function DisplayImage({
+    params,
+}: {
+    params: Promise<{imageId:number}>
 }) {
-    const productId = (await params).productId;
+    const [imageUrl, setImageUrl] = useState('');
 
-    if (productId > 1000){
-        return(
-            notFound()
-        )
-    }
+    useEffect(() => {
+        const fetchImage = async () => {
+            const {imageId} = await params
+            const response = await fetch(`http://localhost:5130/api/Images/3`);
+            if (response.ok) {
+                const blob = await response.blob();
+                setImageUrl(URL.createObjectURL(blob));
+            }
+        };
+
+        fetchImage();
+    }, []);
 
     return (
-        <div>Les details à propos du produit {productId}</div>
+        <div>
+            {imageUrl ? <img src={imageUrl} className='max-w-md h-auto rounded-xl' alt="Uploaded" /> : <p>Loading...</p>}
+        </div>
     );
 }

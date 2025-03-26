@@ -5,6 +5,9 @@ using TwitterAppWebApi.Mappers;
 using TwitterAppWebApi.Models;
 using TwitterAppWebApi.Repository.PostRepositories;
 using System.Security.Claims;
+using TwitterAppWebApi.Repository.ImageRepositories;
+using static System.Net.Mime.MediaTypeNames;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TwitterAppWebApi.Controllers
 {
@@ -14,11 +17,13 @@ namespace TwitterAppWebApi.Controllers
     {
         private readonly IPostRepository _postRepository;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IImageRepository _imageRepository;
 
-        public PostController(IPostRepository postRepository, UserManager<AppUser> userManager)
+        public PostController(IPostRepository postRepository, UserManager<AppUser> userManager, IImageRepository imageRepository)
         {
             _postRepository = postRepository;
             _userManager = userManager;
+            _imageRepository = imageRepository;
         }
 
         [HttpGet]
@@ -46,20 +51,12 @@ namespace TwitterAppWebApi.Controllers
 
         }
 
-        //[HttpGet("{userName}")]
-        //public async Task<IActionResult> GetByName([FromRoute] string userName)
-        //{
-        //    var post = await _postRepository.GetByUserNameAsync(userName);
-        //    var postDto = post.toPostDto();
-        //    return Ok(postDto);
-
-        //}
-
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create(CreatePostDTO createPostDTO)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return UnprocessableEntity(ModelState);
 
             var username = User.FindFirst(ClaimTypes.GivenName)?.Value;
 
@@ -68,7 +65,10 @@ namespace TwitterAppWebApi.Controllers
             var postModel = createPostDTO.toPostFromPostCreate();
             postModel.AppUserId = appUser.Id;
 
-            await _postRepository.CreateAsync(postModel);
+            var post = await _postRepository.CreateAsync(postModel);
+
+            if (post == null)
+                return UnprocessableEntity(post);
 
             return Created();
         }
@@ -77,7 +77,7 @@ namespace TwitterAppWebApi.Controllers
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdatePostDTO postDto)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return UnprocessableEntity(ModelState);
 
             var postModel = await _postRepository.UpdateAsync(id, postDto.toPostFromUpdatePost());
 
@@ -93,7 +93,7 @@ namespace TwitterAppWebApi.Controllers
         public async Task<IActionResult> Delete([FromRoute]int id)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return UnprocessableEntity(ModelState);
 
             var model = await _postRepository.DeleteAsync(id);
             return Ok();

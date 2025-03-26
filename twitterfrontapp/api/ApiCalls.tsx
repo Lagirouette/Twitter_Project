@@ -127,7 +127,7 @@ export async function PostLike(id: number){
         },
         credentials:"same-origin"
     })
-    const nbLike = await response.json()
+    const nbLike : number = await response.json()
     
     return nbLike
 }

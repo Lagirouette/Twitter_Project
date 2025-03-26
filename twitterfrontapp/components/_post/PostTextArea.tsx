@@ -36,7 +36,7 @@ export default function PostTextArea(){
                 placeholder="What's happening ? "
                 onChange={e=> setTweet(e.target.value)}
                 />
-                <p className={`${(tweet?.length==0) && 'hidden'} ${(tweet.length>250) && 'text-red-600'} mt-auto font-mono`}>{tweet?.length}/250</p>
+                <p className={`${(tweet?.length==0) && 'hidden'} ${(tweet.length>280) && 'text-red-600'} mt-auto font-mono`}>{tweet?.length}/280</p>
             </div>
             <div className='flex w-full pt-2'>
                 <svg className="size-10 py-2 text-sky-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -51,7 +51,13 @@ export default function PostTextArea(){
                 </svg>
                 <svg className="size-10 py-2 text-sky-500"  viewBox="0 0 24 24"  width="24"  height="24"  xmlns="http://www.w3.org/2000/svg"  fill="none"  stroke="currentColor"  strokeWidth="2">  <circle cx="12" cy="12" r="10" />  <path d="M8 14s1.5 2 4 2 4-2 4-2" />  <line x1="9" y1="9" x2="9.01" y2="9" />  <line x1="15" y1="9" x2="15.01" y2="9" /></svg>
 
-                <button type='submit' className='ms-auto bg-sky-500 hover:bg-sky-800 rounded-full py-2 px-3 place-self-end font-bold'>Tweet</button>
+                <div className='ms-auto flex'>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-10 py-2 text-sky-500">
+                        <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clipRule={"evenodd"}/>
+                    </svg>
+                    <span className='mr-2 h-full text-2xl'>|</span>
+                    <button type='submit' className=' bg-sky-500 hover:bg-sky-800 rounded-full py-2 px-3 place-self-end font-bold'>Tweet</button>
+                </div>    
 
             </div>
         </form>

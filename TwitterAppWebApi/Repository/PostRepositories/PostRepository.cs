@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using TwitterAppWebApi.Data;
 using TwitterAppWebApi.Models;
 
@@ -52,7 +53,7 @@ namespace TwitterAppWebApi.Repository.PostRepositories
 
         public async Task<Post> GetByIdAsync(int id)
         {
-            return await _context.Posts.Include(a => a.AppUser).FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Posts.Include(a => a.AppUser).Include(x => x.Image).FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<Post> GetByUserNameAsync(string userName)
@@ -70,6 +71,21 @@ namespace TwitterAppWebApi.Repository.PostRepositories
             }
 
             existingPost.Body = post.Body;
+
+            await _context.SaveChangesAsync();
+            return existingPost;
+        }
+
+        public async Task<Post> UpdateImageAsync(int id, int imageId)
+        {
+            var existingPost = await _context.Posts.FirstOrDefaultAsync(c => c.Id == id);
+
+            if (existingPost == null)
+            {
+                return null;
+            }
+
+            existingPost.ImageId = imageId;
 
             await _context.SaveChangesAsync();
             return existingPost;

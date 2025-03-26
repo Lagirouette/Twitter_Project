@@ -64,5 +64,20 @@ namespace TwitterAppWebApi.Repository.CommentRepositories
             await _context.SaveChangesAsync();
             return existComment;
         }
+
+        public async Task<Comment> UpdateImageAsync(int id, int imageId)
+        {
+            var existComment = await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (existComment == null)
+            {
+                return null;
+            }
+
+            existComment.ImageId = imageId;
+
+            await _context.SaveChangesAsync();
+            return existComment;
+        }
     }
 }

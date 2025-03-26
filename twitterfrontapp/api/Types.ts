@@ -12,6 +12,7 @@ export interface Post{
     creatOn: string;
     body: string;
     createdByPseudo:string;
+    imageId:number
 }
 
 export interface Comments{

@@ -7,6 +7,7 @@
         public DateTime CreatOn { get; set; } = DateTime.Now;
         public string CreatedBy { get; set; } = string.Empty;
         public string CreatedByPseudo { get; set; } = string.Empty;
+        public int? ImageId { get; set; }
 
     }
 }

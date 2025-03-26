@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TwitterAppWebApi.Data;
 
@@ -11,9 +12,11 @@ using TwitterAppWebApi.Data;
 namespace TwitterAppWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250320103108_ChangingTypeImageIdInOtherTables")]
+    partial class ChangingTypeImageIdInOtherTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,6 +260,10 @@ namespace TwitterAppWebApi.Migrations
 
                     b.HasIndex("AppUserId");
 
+                    b.HasIndex("ImageId")
+                        .IsUnique()
+                        .HasFilter("[ImageId] IS NOT NULL");
+
                     b.HasIndex("PostId");
 
                     b.ToTable("Comments");
@@ -313,14 +320,6 @@ namespace TwitterAppWebApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CommentId")
-                        .IsUnique()
-                        .HasFilter("[CommentId] IS NOT NULL");
-
-                    b.HasIndex("PostId")
-                        .IsUnique()
-                        .HasFilter("[PostId] IS NOT NULL");
-
                     b.ToTable("Images");
                 });
 
@@ -370,6 +369,10 @@ namespace TwitterAppWebApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
+
+                    b.HasIndex("ImageId")
+                        .IsUnique()
+                        .HasFilter("[ImageId] IS NOT NULL");
 
                     b.ToTable("Posts");
                 });
@@ -433,6 +436,10 @@ namespace TwitterAppWebApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TwitterAppWebApi.Models.Image", "Image")
+                        .WithOne("Comment")
+                        .HasForeignKey("TwitterAppWebApi.Models.Comment", "ImageId");
+
                     b.HasOne("TwitterAppWebApi.Models.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
@@ -440,6 +447,8 @@ namespace TwitterAppWebApi.Migrations
                         .IsRequired();
 
                     b.Navigation("AppUser");
+
+                    b.Navigation("Image");
 
                     b.Navigation("Post");
                 });
@@ -453,21 +462,6 @@ namespace TwitterAppWebApi.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TwitterAppWebApi.Models.Image", b =>
-                {
-                    b.HasOne("TwitterAppWebApi.Models.Comment", "Comment")
-                        .WithOne("Image")
-                        .HasForeignKey("TwitterAppWebApi.Models.Image", "CommentId");
-
-                    b.HasOne("TwitterAppWebApi.Models.Post", "Post")
-                        .WithOne("Image")
-                        .HasForeignKey("TwitterAppWebApi.Models.Image", "PostId");
-
-                    b.Navigation("Comment");
-
-                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("TwitterAppWebApi.Models.Like", b =>
@@ -487,7 +481,13 @@ namespace TwitterAppWebApi.Migrations
                         .WithMany("Posts")
                         .HasForeignKey("AppUserId");
 
+                    b.HasOne("TwitterAppWebApi.Models.Image", "Image")
+                        .WithOne("Post")
+                        .HasForeignKey("TwitterAppWebApi.Models.Post", "ImageId");
+
                     b.Navigation("AppUser");
+
+                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("TwitterAppWebApi.Models.AppUser", b =>
@@ -495,16 +495,16 @@ namespace TwitterAppWebApi.Migrations
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("TwitterAppWebApi.Models.Comment", b =>
+            modelBuilder.Entity("TwitterAppWebApi.Models.Image", b =>
                 {
-                    b.Navigation("Image");
+                    b.Navigation("Comment");
+
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("TwitterAppWebApi.Models.Post", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("Image");
                 });
 #pragma warning restore 612, 618
         }

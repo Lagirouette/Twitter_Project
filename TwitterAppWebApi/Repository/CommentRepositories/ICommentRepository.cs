@@ -9,6 +9,7 @@ namespace TwitterAppWebApi.Repository.CommentRepositories
         Task<Comment> GetbyIdAsync(int id);
         Task<Comment> CreateAsync(Comment commentModel);
         Task<Comment> UpdateAsync(int id, Comment commentModel);
+        Task<Comment> UpdateImageAsync(int id, int imageId);
         Task<Comment> DeleteAsync(int id);
     }
 }

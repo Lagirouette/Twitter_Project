@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using TwitterAppWebApi.Repository.CommentRepositories;
 using TwitterAppWebApi.Repository.LikeRepositories;
 using TwitterAppWebApi.Repository.FollowRepositories;
+using TwitterAppWebApi.Repository.ImageRepositories;
 
 var MyAllowSpecificOrigins = "AllowAll";
 var builder = WebApplication.CreateBuilder(args);
@@ -97,6 +98,7 @@ builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IFollowRepository, FollowRepository>();
 builder.Services.AddScoped<ILikeRepository, LikeRepository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();

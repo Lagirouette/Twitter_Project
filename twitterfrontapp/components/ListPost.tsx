@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import EngagingBarPost from "./_EngagingBar/EngagementBar";
 import { formatDate } from "@/function/DateFormat";
+import ImagePost from "./ImagePost";
 
 const posts= await GetAllPost()
 
@@ -30,6 +31,7 @@ export default async function ListPost() {
                         <Link href={"tweet/"+post.id}>
                             <p className="text-white mb-4 leading-relaxed">{post.body}</p>
                         </Link>
+                        <ImagePost imageId={post.imageId}/>
                         <EngagingBarPost postId={post.id}/>
                     </div>
                 </div>

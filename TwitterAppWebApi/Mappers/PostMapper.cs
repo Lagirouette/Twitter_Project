@@ -13,7 +13,8 @@ namespace TwitterAppWebApi.Mappers
                 Body = postModel.Body,
                 CreatedBy = postModel.AppUser.UserName,
                 CreatedByPseudo = postModel.AppUser.Pseudo,
-                CreatOn = postModel.CreatOn
+                CreatOn = postModel.CreatOn,
+                ImageId = postModel.ImageId
             };
         }
 

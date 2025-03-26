@@ -5,6 +5,7 @@ import EngagingBar from "@/components/_EngagingBar/page";
 import LeftSideBar from "@/components/_lsidebar/lsidebar";
 import CommentTextArea from "@/components/_post/CommentTextArea";
 import Sidebar from "@/components/_sidebar/Sidebar";
+import ImagePost from "@/components/ImagePost";
 import { extractTime, formatDate, formatDateV2 } from "@/function/DateFormat";
 import { cookies } from "next/headers";
 import Link from "next/link";
@@ -57,6 +58,7 @@ export default async function Page({
                     </div>
                     <div>
                         <p className="text-white pl-1 mt-1 mb-3 leading-relaxed">{post.body}</p>
+                        <ImagePost imageId={post.imageId}/>
                         <p className="pl-1 pb-1 text-sm text-gray-500">{extractTime(post.creatOn)} ⸱ {formatDateV2(post.creatOn)} ⸱ Nb of views</p>
                     </div>
                     <div className="border-t border-solid border-gray-700 mt-2 ">
