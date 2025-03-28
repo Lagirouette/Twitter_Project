@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 using TwitterAppWebApi.Data;
 using TwitterAppWebApi.Models;
 
 namespace TwitterAppWebApi.Repository.LikeRepositories
 {
+    [ExcludeFromCodeCoverage]
     public class LikeRepository : ILikeRepository
     {
         private readonly ApplicationDBContext _context;

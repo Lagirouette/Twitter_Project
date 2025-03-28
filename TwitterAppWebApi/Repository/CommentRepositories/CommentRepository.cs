@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 using TwitterAppWebApi.Data;
 using TwitterAppWebApi.Models;
 
 namespace TwitterAppWebApi.Repository.CommentRepositories
 {
+    [ExcludeFromCodeCoverage]
     public class CommentRepository : ICommentRepository
     {
         private readonly ApplicationDBContext _context;

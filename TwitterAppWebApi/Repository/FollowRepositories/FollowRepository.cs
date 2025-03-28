@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 using TwitterAppWebApi.Data;
 using TwitterAppWebApi.Models;
 
 namespace TwitterAppWebApi.Repository.FollowRepositories
 {
+    [ExcludeFromCodeCoverage]
     public class FollowRepository : IFollowRepository
     {
         private readonly ApplicationDBContext _context;

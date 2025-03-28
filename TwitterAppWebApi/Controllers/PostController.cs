@@ -48,7 +48,6 @@ namespace TwitterAppWebApi.Controllers
             var post = await _postRepository.GetByIdAsync(id);
             var postDto = post.toPostDto();
             return Ok(postDto);
-
         }
 
         [HttpPost]
@@ -63,7 +62,9 @@ namespace TwitterAppWebApi.Controllers
             var appUser = await _userManager.FindByNameAsync(username);
 
             var postModel = createPostDTO.toPostFromPostCreate();
-            postModel.AppUserId = appUser.Id;
+
+            try { postModel.AppUserId = appUser.Id; } 
+            catch { return NotFound("User not found"); }
 
             var post = await _postRepository.CreateAsync(postModel);
 
@@ -83,7 +84,7 @@ namespace TwitterAppWebApi.Controllers
 
             if (postModel == null)
             {
-                return NotFound("Post not found");
+                return NotFound("Post not found !");
             }
 
             return Ok(postModel.toPostDto());
@@ -96,7 +97,11 @@ namespace TwitterAppWebApi.Controllers
                 return UnprocessableEntity(ModelState);
 
             var model = await _postRepository.DeleteAsync(id);
-            return Ok();
+
+            if (model == null)
+                return NotFound("Post not found !");
+
+            return Ok(model);
         }
     }
 }

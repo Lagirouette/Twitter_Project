@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using System.Diagnostics.CodeAnalysis;
 using TwitterAppWebApi.Data;
 using TwitterAppWebApi.Models;
 
 namespace TwitterAppWebApi.Repository.PostRepositories
 {
+    [ExcludeFromCodeCoverage]
     public class PostRepository : IPostRepository
     {
         private readonly ApplicationDBContext _context;

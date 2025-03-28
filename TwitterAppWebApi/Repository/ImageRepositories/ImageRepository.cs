@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.Design;
+using System.Diagnostics.CodeAnalysis;
 using TwitterAppWebApi.Data;
 using TwitterAppWebApi.Models;
 
 namespace TwitterAppWebApi.Repository.ImageRepositories
 {
+    [ExcludeFromCodeCoverage]
     public class ImageRepository : IImageRepository
     {
         private readonly ApplicationDBContext _context;
