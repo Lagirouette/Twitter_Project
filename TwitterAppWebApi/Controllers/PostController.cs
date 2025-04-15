@@ -71,7 +71,7 @@ namespace TwitterAppWebApi.Controllers
             if (post == null)
                 return UnprocessableEntity(post);
 
-            return Created();
+            return Created("",post.toPostDto());
         }
 
         [HttpPut("{id:int}")]
