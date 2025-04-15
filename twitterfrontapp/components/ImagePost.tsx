@@ -11,7 +11,7 @@ export default function ImagePost({imageId}:{imageId:number}) {
                 return
             }
             const fetchImage = async () => {
-                const response = await fetch(`http://localhost:5130/api/Images/${imageId}`);
+                const response = await fetch(`https://localhost:44301/api/Images/${imageId}`);
                 if (response.ok) {
                     const blob = await response.blob();
                     setImageUrl(URL.createObjectURL(blob));

@@ -13,11 +13,11 @@ export default function EngagingBarPost({postId}:{postId:number}) {
     const router = useRouter()
 
     useEffect(() => {
-        fetch(`http://localhost:5130/api/like/${postId}`)
+        fetch(`https://localhost:44301/api/like/${postId}`)
             .then((response) => response.json())
             .then((json) => setData(json));
         
-        fetch(`http://localhost:5130/api/comment/nb/${postId}`)
+        fetch(`https://localhost:44301/api/comment/nb/${postId}`)
             .then((response) => response.json())
             .then((json) => setDataComment(json));
 

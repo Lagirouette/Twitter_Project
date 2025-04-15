@@ -2,28 +2,30 @@ import { RecupRealToken, RecupToken, RecupTokenBool } from "@/Token/RecupToken";
 import "@/api/Types"
 import { Comments, Post, User } from "@/api/Types";
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+const Api = process.env.API_URL;
 
 export async function GetUser(userName:string){
-    const response = await fetch(`http://localhost:5130/api/account/${userName}`)
+    const response = await fetch(`https://localhost:44301/api/account/${userName}`)
     const user: User = await response.json()
     return user 
 }
 
 export async function GetUserFromId(id:string){
-    const response = await fetch(`http://localhost:5130/api/account/id/${id}`)
+    const response = await fetch(`https://localhost:44301/api/account/id/${id}`)
     const user: User = await response.json()
     return user.id 
 }
 
 export async function GetIdUser(userName:string){
-    const response = await fetch(`http://localhost:5130/api/account/getid/${userName}`)
+    const response = await fetch(`https://localhost:44301/api/account/getid/${userName}`)
     const user: User = await response.json()
     return user.id 
 }
 
 export async function UpdateProfile(Profil: string){
     const token = await RecupRealToken()
-    const data =  await fetch(`http://localhost:5130/api/account/profil?profil=${Profil}`, {
+    const data =  await fetch(`https://localhost:44301/api/account/profil?profil=${Profil}`, {
         method:"PUT",
         headers:{
             "Content-Type": "application/json; charset=utf-8",
@@ -35,32 +37,32 @@ export async function UpdateProfile(Profil: string){
 }
 
 export async function GetAllPost(){
-    const response = await fetch("http://localhost:5130/api/post")
+    const response = await fetch(`https://localhost:44301/api/post`)
     const posts: Post[] = await response.json()
     return posts 
 }
 
 export async function GetUserPosts(userId:string) {
-    const response = await fetch(`http://localhost:5130/api/post/${userId}`)
+    const response = await fetch(`https://localhost:44301/api/post/${userId}`)
     const posts: Post[] = await response.json()
     return posts
 }
 
 export async function GetPost(id: number){
-    const response = await fetch(`http://localhost:5130/api/post/${id}`)
+    const response = await fetch(`https://localhost:44301/api/post/${id}`)
     const posts: Post = await response.json()
     return posts
 }
 
 export async function GetComment(id: number){
-    const response = await fetch(`http://localhost:5130/api/comment/all/${id}`)
+    const response = await fetch(`https://localhost:44301/api/comment/all/${id}`)
     const comments: Comments[] = await response.json()
     
     return comments
 }
 
 export async function LoginTwitter(username: string | undefined, password: string | undefined){ 
-    const data =  await fetch("http://localhost:5130/api/account/login", {
+    const data =  await fetch("https://localhost:44301/api/account/login", {
         method:"POST",
         headers:{"Content-Type": "application/json; charset=utf-8"},
         credentials:"same-origin",
@@ -80,7 +82,7 @@ export async function LoginTwitter(username: string | undefined, password: strin
 
 export async function CreateNewComment(comment: string | undefined, postId: number){
     const token = await RecupRealToken()
-    const data =  await fetch(`http://localhost:5130/api/comment/${postId}`, {
+    const data =  await fetch(`https://localhost:44301/api/comment/${postId}`, {
         method:"POST",
         headers:{
             "Content-Type": "application/json; charset=utf-8",
@@ -91,12 +93,13 @@ export async function CreateNewComment(comment: string | undefined, postId: numb
             content:comment
         })
     })
-    return data
+    const response : Comment = await data.json()
+    return response
 }
 
 export async function CreateNewPost(tweet: string){
     const token = await RecupRealToken()
-    const data =  await fetch("http://localhost:5130/api/post", {
+    const data =  await fetch(`https://localhost:44301/api/post`, {
         method:"POST",
         headers:{
             "Content-Type": "application/json; charset=utf-8",
@@ -107,11 +110,12 @@ export async function CreateNewPost(tweet: string){
             body:tweet
         })
     })
-    return data
+    const response : Post = await data.json()
+    return response
 }
 
 export async function GetLike(id: number){
-    const response = await fetch(`http://localhost:5130/api/like/${id}`)
+    const response = await fetch(`https://localhost:44301/api/like/${id}`)
     const nbLike: number = await response.json()
     
     return nbLike
@@ -119,7 +123,7 @@ export async function GetLike(id: number){
 
 export async function PostLike(id: number){
     const token = await RecupRealToken()
-    const response = await fetch(`http://localhost:5130/api/like/${id}`, {
+    const response = await fetch(`https://localhost:44301/api/like/${id}`, {
         method:"POST",
         headers:{
             "Content-Type": "application/json; charset=utf-8",
@@ -134,7 +138,7 @@ export async function PostLike(id: number){
 
 export async function DeleteLike(id: number){
     const token = await RecupRealToken()
-    await fetch(`http://localhost:5130/api/like/${id}`, {
+    await fetch(`https://localhost:44301/api/like/${id}`, {
         method:"DELETE",
         headers:{
             "Content-Type": "application/json; charset=utf-8",
@@ -150,7 +154,7 @@ export async function GetIfLiked(id: number){
     const existentToken = await RecupTokenBool()
     if(existentToken == true){
         const token = await RecupRealToken()
-        const response = await fetch(`http://localhost:5130/api/like/status/${id}`, {
+        const response = await fetch(`https://localhost:44301/api/like/status/${id}`, {
             method:"GET",
             headers:{
                 "Content-Type": "application/json; charset=utf-8",
@@ -170,7 +174,7 @@ export async function Follow(userName: string){
     const token = await RecupRealToken()
     const user = await GetIdUser(userName)
     
-    const data =  await fetch(`http://localhost:5130/api/follow/${user}`, {
+    const data =  await fetch(`https://localhost:44301/api/follow/${user}`, {
         method:"POST",
         headers:{
             "Content-Type": "application/json; charset=utf-8",
@@ -185,7 +189,7 @@ export async function Unfollow(userName: string){
     const token = await RecupRealToken()
     const userId = await GetIdUser(userName)
     
-    await fetch(`http://localhost:5130/api/follow/${userId}`, {
+    await fetch(`https://localhost:44301/api/follow/${userId}`, {
         method:"DELETE",
         headers:{
             "Content-Type": "application/json; charset=utf-8",
@@ -202,7 +206,7 @@ export async function GetIfFollow(userName: string){
 
     if(existentToken == true){
         const token = await RecupRealToken()
-        const response = await fetch(`http://localhost:5130/api/follow/IfUserIsFollowing/${userId}`, {
+        const response = await fetch(`https://localhost:44301/api/follow/IfUserIsFollowing/${userId}`, {
             method:"GET",
             headers:{
                 "Content-Type": "application/json; charset=utf-8",
@@ -218,25 +222,51 @@ export async function GetIfFollow(userName: string){
 }
 
 export async function GetFollowers(userName:string){
-    const response = await fetch(`http://localhost:5130/api/follow/followers/${userName}`)
+    const response = await fetch(`https://localhost:44301/api/follow/followers/${userName}`)
     const user: User = await response.json()
     return user.id 
 }
 
 export async function GetNumberOfFollowers(userName:string){
-    const response = await fetch(`http://localhost:5130/api/follow/nbfollowers/${userName}`)
+    const response = await fetch(`https://localhost:44301/api/follow/nbfollowers/${userName}`)
     const NumberOfFollowers: number = await response.json()
     return NumberOfFollowers
 }
 
 export async function GetFollowings(userName:string){
-    const response = await fetch(`http://localhost:5130/api/follow/followings/${userName}`)
+    const response = await fetch(`https://localhost:44301/api/follow/followings/${userName}`)
     const user: User = await response.json()
     return user.id 
 }
 
 export async function GetNumberFollowings(userName:string){
-    const response = await fetch(`http://localhost:5130/api/follow/nbsfollowings/${userName}`)
+    const response = await fetch(`https://localhost:44301/api/follow/nbsfollowings/${userName}`)
     const NumberFollowings: number = await response.json()
     return NumberFollowings
+}
+
+export async function PostImage(postid: number, filePost:File){    
+    const formData = new FormData();
+    formData.append('file', filePost);
+
+    const response = await fetch(`https://localhost:44301/api/images/postimg/${postid}`, {
+        method:"POST",
+        body: formData,
+        credentials:"same-origin"
+    })
+    return response
+}
+
+export async function CommImage(postid: number, fileComm:File){
+    const formData = new FormData();
+    formData.append('file', fileComm);
+
+    const response = await fetch(`https://localhost:44301/api/Images/commentimg/${postid}`, {
+        method:"POST",
+        body: formData,
+        credentials:"same-origin"
+    })
+    const file = await response.json()
+    
+    return file
 }

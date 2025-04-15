@@ -6,6 +6,15 @@ export interface User {
     profil: string;
 }
 
+export interface UserJson {
+    id: string;
+    name: string;
+    phone: string;
+    email: number;
+    username: string;
+    website: string;
+}
+
 export interface Post{
     id: number;
     createdBy: string;

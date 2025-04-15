@@ -1,12 +1,13 @@
 "use client"
 
-import { CreateNewPost } from '@/api/ApiCalls'
+import { CreateNewPost, PostImage } from '@/api/ApiCalls'
 import { RecupTokenBool } from '@/Token/RecupToken'
 import { useRouter } from 'next/navigation'
 import React, { SyntheticEvent, useState } from 'react'
 
 export default function PostTextArea(){
     const [tweet, setTweet] = useState("")
+    const [image, setImage] = useState<File>()
     const router = useRouter()
 
     const submit = async (e:SyntheticEvent) => {
@@ -16,11 +17,16 @@ export default function PostTextArea(){
 
         try{
            if(token){ 
-            await CreateNewPost(tweet)
+            const post = await CreateNewPost(tweet)
+
+            if(image){
+                await PostImage(post.id, image)
+            }
+
             await router.refresh()
           }
         }catch(e){
-          alert("Tu ne tes pas co")
+          console.log(e)
         }
       }
     
@@ -52,9 +58,12 @@ export default function PostTextArea(){
                 <svg className="size-10 py-2 text-sky-500"  viewBox="0 0 24 24"  width="24"  height="24"  xmlns="http://www.w3.org/2000/svg"  fill="none"  stroke="currentColor"  strokeWidth="2">  <circle cx="12" cy="12" r="10" />  <path d="M8 14s1.5 2 4 2 4-2 4-2" />  <line x1="9" y1="9" x2="9.01" y2="9" />  <line x1="15" y1="9" x2="15.01" y2="9" /></svg>
 
                 <div className='ms-auto flex'>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-10 py-2 text-sky-500">
-                        <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clipRule={"evenodd"}/>
-                    </svg>
+                    <label htmlFor="image_uploads">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-10 py-2 text-sky-500 hover:text-sky-800 active:text-white">
+                            <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clipRule={"evenodd"}/>
+                        </svg>
+                    </label>
+                    <input className="hidden" type="file" id="image_uploads" name="image_uploads" onChange={e => {if(e.target.files)setImage(e.target.files[0])}}/>
                     <span className='mr-2 h-full text-2xl'>|</span>
                     <button type='submit' className=' bg-sky-500 hover:bg-sky-800 rounded-full py-2 px-3 place-self-end font-bold'>Tweet</button>
                 </div>    
